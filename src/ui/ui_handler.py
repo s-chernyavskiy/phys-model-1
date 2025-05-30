@@ -15,6 +15,7 @@ class UIHandler:
 
         self.speaker = Speaker()
         self.audio_handler = AudioHandler()
+        self.is_playing = False
 
         self._add_speaker_components()
         self._setup_animation()
@@ -57,15 +58,12 @@ class UIHandler:
             valstep=0.1
         )
 
-        self.ax_play = plt.axes([0.8, 0.05, 0.1, 0.04])
-        self.play_button = Button(self.ax_play, 'Воспроизвести', color='lightgreen')
-        self.ax_stop = plt.axes([0.65, 0.05, 0.1, 0.04])
-        self.stop_button = Button(self.ax_stop, 'Стоп', color='lightcoral')
+        self.ax_toggle = plt.axes([0.8, 0.05, 0.1, 0.04])
+        self.toggle_button = Button(self.ax_toggle, 'Воспроизвести', color='lightgreen')
 
         self.freq_slider.on_changed(self._update_freq)
         self.voltage_slider.on_changed(self._update_voltage)
-        self.play_button.on_clicked(self._play_button_click)
-        self.stop_button.on_clicked(self._stop_button_click)
+        self.toggle_button.on_clicked(self._toggle_button_click)
 
     def _add_speaker_components(self):
         self.ax.add_patch(self.speaker.magnet)
@@ -109,11 +107,17 @@ class UIHandler:
     def _update_voltage(self, _: float) -> None:
         self.audio_handler.update_voltage(self.voltage_slider.val)
 
-    def _play_button_click(self, _) -> None:
-        self.audio_handler.play()
-
-    def _stop_button_click(self, _) -> None:
-        self.audio_handler.stop()
+    def _toggle_button_click(self, _) -> None:
+        if self.is_playing:
+            self.audio_handler.stop()
+            self.toggle_button.label.set_text('Воспроизвести')
+            self.toggle_button.color = 'lightgreen'
+        else:
+            self.audio_handler.play()
+            self.toggle_button.label.set_text('Стоп')
+            self.toggle_button.color = 'lightcoral'
+        self.is_playing = not self.is_playing
+        self.fig.canvas.draw_idle()
 
     def show(self):
         plt.show()
