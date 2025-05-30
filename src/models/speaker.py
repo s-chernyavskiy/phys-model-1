@@ -8,7 +8,7 @@ from matplotlib.patches import Circle, Rectangle, Polygon
 @dataclass
 class SpeakerDimensions:
     coil_radius: float = 0.02
-    coil_height: float = 0.01
+    coil_height: float = 0.03
     diaphragm_radius: float = 0.1
     magnet_width: float = 0.1
     magnet_height: float = 0.03
