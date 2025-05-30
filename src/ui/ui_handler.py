@@ -87,7 +87,7 @@ class UIHandler:
     def _update(self, frame: int) -> tuple:
         t = frame / 20
         amplitude = 0.005 * (self.voltage_slider.val / 5.0)
-        speed_factor = max(1.0, self.freq_slider.val / 1) # / 100) [Раскомментировать для коэффициента k]
+        speed_factor = max(1.0, self.freq_slider.val)
 
         coil, diaphragm = self.speaker.update_position(
             amplitude,
