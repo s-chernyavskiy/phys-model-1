@@ -76,7 +76,7 @@ class Speaker:
 
         self.diaphragm.set_xy([
             [-self.dimensions.diaphragm_radius, y_coil],
-            [0, 0.15 + 2 * amplitude * np.sin(2 * np.pi * frequency * time)],
+            [0, 0.15 + amplitude * np.sin(2 * np.pi * frequency * time)],
             [self.dimensions.diaphragm_radius, y_coil]
         ])
 
