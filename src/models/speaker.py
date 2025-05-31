@@ -14,6 +14,7 @@ class SpeakerDimensions:
     magnet_height: float = 0.03
     frame_width: float = 0.24
     frame_height: float = 0.01
+    b: float = 1.0
 
 
 class Speaker:
@@ -70,7 +71,17 @@ class Speaker:
             alpha=0.7
         )
 
-    def update_position(self, amplitude: float, frequency: float, time: float) -> Tuple[Circle, Polygon]:
+        self._create_magnetic_field()
+
+    def _create_magnetic_field(self):
+        self.field_x = np.linspace(-0.1, 0.1, 100)
+        self.field_strength = self.dimensions.b * np.exp(-100 * self.field_x ** 2)
+
+    def get_field_data(self, coil_position: float) -> Tuple[np.ndarray, np.ndarray]:
+        direction = -1 if coil_position > self.dimensions.coil_height / 2 else 1
+        return self.field_x, self.field_strength * direction
+
+    def update_position(self, amplitude: float, frequency: float, time: float) -> Tuple[Circle, Polygon, Tuple[np.ndarray, np.ndarray]]:
         y_coil = self.dimensions.coil_height / 2 + amplitude * np.sin(2 * np.pi * frequency * time)
         self.coil.center = (0, y_coil)
 
@@ -80,4 +91,5 @@ class Speaker:
             [self.dimensions.diaphragm_radius, y_coil]
         ])
 
-        return self.coil, self.diaphragm
+        field_data = self.get_field_data(y_coil)
+        return self.coil, self.diaphragm, field_data
