@@ -99,7 +99,8 @@ class UIHandler:
         coil, diaphragm, field_data = self.speaker.update_position(
             amplitude,
             self.freq_slider.val * speed_factor / 50,
-            t
+            t,
+            self.voltage_slider.val
         )
 
         wave_time = np.linspace(0, 0.02, 500)
@@ -107,7 +108,6 @@ class UIHandler:
             2 * np.pi * self.freq_slider.val * (wave_time - 0.1 * t))
 
         self.wave_plot.set_data(wave_time, wave_amp)
-
         self.field_plot.set_data(field_data[0], field_data[1])
 
         return coil, diaphragm, self.wave_plot, self.field_plot
